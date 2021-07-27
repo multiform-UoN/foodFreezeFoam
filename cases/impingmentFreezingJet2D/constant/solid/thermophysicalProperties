@@ -1,0 +1,89 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant/metal";
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            heSolidThermo;
+    mixture         pureMixture;
+    transport       processedMeat;
+    thermo          hProcessedMeat;
+    equationOfState rhoProcessedMeat;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
+
+mixture
+{
+    // processed meat (hamburgers, sausages, etc.)
+
+    specie
+    {
+        molWeight       27; //Not important
+    }
+    equationOfState
+    {
+        rho       1053; //Not important
+    	Yw	  0.7;  //Water content
+    	Tf	  271.7418;   //Freezing temperature
+    }
+    transport
+    {
+        kappa           1; //Not important
+    }
+    thermodynamics
+    {
+        Hf              0;  //Not important
+        Cp              2000; //Not important
+    }
+}
+
+// thermoType
+// {
+//     type            heSolidThermo;
+//     mixture         pureMixture;
+//     transport       constIso;
+//     thermo          hConst;
+//     equationOfState rhoConst;
+//     specie          specie;
+//     energy          sensibleEnthalpy;
+// }
+//
+// mixture
+// {
+//     // Aluminium
+//
+//     specie
+//     {
+//         molWeight       27;
+//     }
+//     equationOfState
+//     {
+//         rho             2700;
+//     }
+//     transport
+//     {
+//         kappa           200;
+//     }
+//     thermodynamics
+//     {
+//         Hf              0;
+//         Cp              900;
+//     }
+// }
+
+
+// ************************************************************************* //

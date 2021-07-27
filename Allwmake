@@ -1,0 +1,2 @@
+wmake thermoPhysicalModels/solidSpecie
+wmake thermoPhysicalModels/solidThermo

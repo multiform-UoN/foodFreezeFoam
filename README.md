@@ -9,7 +9,7 @@ A collection of tools for the numerical simulation of food freezing processes us
 
 Compilation and dependencies
 ----------------------------
-This library requires [OpenFOAM-7](https://openfoam.org/version/7/). To compile the library use the __Allwmake__ script.
+This library requires [OpenFOAM-6](https://openfoam.org/version/6/). To compile the library use the __Allwmake__ script.
 
 Authors
 -------

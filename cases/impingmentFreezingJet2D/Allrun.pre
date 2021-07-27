@@ -1,0 +1,42 @@
+#!/bin/sh
+cd ${0%/*} || exit 1                        # Run from this directory
+./Allclean
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+runApplication blockMesh
+runApplication topoSet
+
+# Restore initial fields
+
+runApplication splitMeshRegions -cellZones -overwrite
+
+# Remove fluid fields from solid regions (important for post-processing)
+rm -f 0/solid/{nut,alphat,epsilon,k,U,p_rgh}
+rm 0/solid/nut.gz
+rm 0/solid/alphat.gz
+rm 0/solid/epsilon.gz
+rm 0/solid/k.gz
+rm 0/solid/U.gz
+rm 0/solid/p_rgh.gz
+
+rm -f processor*/0/solid/{nut,alphat,epsilon,k,U,p_rgh}
+rm processor*/0/solid/nut.gz
+rm processor*/0/solid/alphat.gz
+rm processor*/0/solid/epsilon.gz
+rm processor*/0/solid/k.gz
+rm processor*/0/solid/U.gz
+rm processor*/0/solid/p_rgh.gz
+
+
+changeDictionary -region solid>log.changeDictionary-solid
+
+changeDictionary -region fluid>log.changeDictionary-fluid
+
+rm -r constant/polyMesh
+#./fields
+paraFoam -touchAll
+echo
+echo "Pre-processing over"
+
+
+#------------------------------------------------------------------------------

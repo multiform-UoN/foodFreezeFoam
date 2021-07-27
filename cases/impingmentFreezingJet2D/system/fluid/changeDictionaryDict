@@ -1,0 +1,262 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1812                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+U
+{
+    //internalField   uniform (-0.1 0 0);
+
+    boundaryField
+    {
+        jet
+        {
+            type            fixedValue;
+            value           uniform (-20 0 0);
+        }
+        "(left|right)"
+        {
+        type            zeroGradient;//inletOutlet;
+        //inletValue      uniform (0 0 0);
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+        "(bottomLeft|bottomRight)"
+        {
+            type            noSlip;
+//            type            fluxCorrectedVelocity;
+//            inletValue      uniform (0 0 0);
+        }
+        fluid_to_solid
+        {
+            type            fixedValue;
+            value           uniform (0 0 0.001);
+        }
+
+    }
+}
+
+T
+{
+    internalField   uniform 225;
+
+    boundaryField
+    {
+        jet
+        {
+            type            fixedValue;
+            value           $internalField;
+        }
+        "(left|right)"
+        {
+            type            zeroGradient;
+            value           $internalField;//inletOutlet;
+ //           inletValue      $internalField;
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+        "(bottomLeft|bottomRight)"
+        {
+            type            zeroGradient;
+            value           $internalField;
+        }
+        fluid_to_solid
+        {
+            type            compressible::turbulentTemperatureCoupledBaffleMixed;
+            Tnbr            T;
+            kappaMethod     fluidThermo;
+            value           $internalField;
+        }
+    }
+}
+
+omega
+{
+    internalField   uniform 1e-9;
+
+    boundaryField
+    {
+        ".*"
+        {
+            type            omegaWallFunction;
+            value           $internalField;
+        }
+        jet
+        {
+            type            turbulentMixingLengthFrequencyInlet;
+	    mixingLength    0.035;
+            value           $internalField;
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+        "(left|right)"
+        {
+            type            zeroGradient;
+            inletValue      $internalField;
+        }
+//       "(bottomLeft|bottomRight)"
+//        {
+//            type            fixedValue;
+//            value 	    $internalField;
+//        }
+    }
+}
+
+k
+{
+    internalField   uniform 1e-9;
+
+    boundaryField
+    {
+       ".*"
+        {
+            type            kLowReWallFunction;
+            value           $internalField;
+        }        
+	"(left|right)"
+        {
+            type            zeroGradient;
+            inletValue      $internalField;
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+        jet
+        {
+            type            turbulentIntensityKineticEnergyInlet;
+	    intensity	    0.025;
+            value           $internalField;
+        }
+//        "(bottomLeft|bottomRight)"
+//        {
+//            type            fixedValue;
+//            inletValue      $internalField;
+//        }
+    }
+}
+nut
+{
+    internalField   uniform 0;
+
+    boundaryField
+    {
+        ".*"
+        {
+            type            nutkWallFunction;
+            value           $internalField;
+        }
+        jet
+        {
+            type            calculated;
+            value           $internalField;
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+        "(left|right)"
+        {
+            type            zeroGradient;
+            inletValue      uniform 0;
+        }
+    }
+}
+alphat
+{
+    internalField   uniform 0;
+
+    boundaryField
+    {
+        ".*"
+        {
+            type            compressible::alphatWallFunction;
+            Prt             0.85;
+            value           $internalField;
+        }
+        jet
+        {
+            type            calculated;
+            value           $internalField;
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+        "(left|right)"
+        {
+            type            calculated;
+            inletValue      $internalField;
+        }
+//        "(bottomLeft|bottomRight)"
+//        {
+//            type            calculated;
+//            inletValue      uniform 0;
+//       }
+    }
+}
+p_rgh
+{
+    internalField   uniform 0;
+
+    boundaryField
+    {
+       ".*"
+        {
+            type            fixedFluxPressure;//zeroGradient;//
+            value           $internalField;
+        }       
+ 	jet
+        {
+            type            zeroGradient;
+            value           $internalField;
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+        "(left|right)"
+        {
+            type            fixedValue;
+            value           $internalField;
+        }
+    }
+}
+
+p
+{
+    internalField   uniform 0;
+
+    boundaryField
+    {
+        ".*"
+        {
+            type            calculated;
+            value           $internalField;
+        }
+        "(front|back)"
+        {
+            type            wedge;
+        }
+    }
+
+}
+
+// ************************************************************************* //
