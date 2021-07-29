@@ -17,92 +17,11 @@ FoamFile
 
 advectionSource
 {
-    type            scalarCodedSource;
+    type            advectionSource;
 
     active          yes;
 
-    name    sourceTime;
-
     selectionMode   all;
-
-    scalarCodedSourceCoeffs
-    {
-        selectionMode   all;
-
-        fields          (h);
-
-        codeInclude
-        #{
-            #include "fvCFD.H"
-            #include "word.H"
-        #};
-
-        codeCorrect
-        #{
-            //Pout<< "**codeCorrect**" << endl;
-        #};
-
-        codeAddSup
-        #{
-            Info<< "\nAdding advection to solid region: "
-                << mesh().name() << endl;
-
-	    volScalarField rho1 =  mesh().lookupObject<volScalarField>("thermo:rho");
-	    volScalarField h =  mesh().lookupObject<volScalarField>("h");
-	    volScalarField betav_solid =  mesh().lookupObject<volScalarField>("betavSolid");
-	    volScalarField alpha_solid =  mesh().lookupObject<volScalarField>("thermo:alpha");
-            if(mesh().foundObject<volVectorField>("U"))
-            {
-                const volVectorField& U
-                (
-                    mesh().lookupObject<volVectorField>("U")
-                );
-                const volScalarField& h = eqn.psi();
-                surfaceScalarField phi = fvc::flux(U);
-                eqn -= fvm::div(phi,h);
-            }
-            else
-            {
-                volVectorField U
-                (
-                    IOobject
-                    (
-                        "U",
-                        mesh().time().constant(),
-                        mesh(),
-                        IOobject::MUST_READ,
-                        IOobject::NO_WRITE
-                    ),
-                    mesh()
-                );
-
-                const volScalarField& h = eqn.psi();
-                surfaceScalarField phi = fvc::flux(rho1*U);
-                eqn -= fvm::div(phi,h);
-
-            }
-		if(mesh().time().write())
-		{
-			rho1.write();
-			alpha_solid.write();
-          		h.write();
-		}
-        #};
-
-        codeSetValue
-        #{
-            //Pout<< "**codeSetValue**" << endl;
-        #};
-
-        // Dummy entry. Make dependent on above to trigger recompilation
-        code
-        #{
-            $codeInclude
-            $codeCorrect
-            $codeAddSup
-            $codeSetValue
-        #};
-    }
 
 }
 limitT

@@ -1,0 +1,6 @@
+/* dynamicCode:
+ * SHA1 = 1d0345b53e96441e5b6de5b21dfc9e493f8e2f86
+ */
+advectionSource.C
+
+LIB = $(FOAM_USER_LIBBIN)/libfvOptionsAdvectionSource
