@@ -1,2 +1,3 @@
 wmake thermoPhysicalModels/solidSpecie
 wmake thermoPhysicalModels/solidThermo
+wmake fvOptions/advectionSource
